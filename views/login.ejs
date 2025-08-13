@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Login - SIPJ Admin</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+        .bg-login-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .login-brand {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #5a5c69;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        .btn-user {
+            font-size: 0.8rem;
+            border-radius: 10rem;
+            padding: 0.75rem 1rem;
+        }
+        .form-control-user {
+            font-size: 0.8rem;
+            border-radius: 10rem;
+            padding: 1.5rem 1rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-primary">
+    <div class="container">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image">
+                                <div class="p-5 d-flex flex-column justify-content-center h-100">
+                                    <div class="text-center">
+                                        <i class="fas fa-map-marked-alt fa-5x text-white mb-4"></i>
+                                        <h2 class="text-white font-weight-bold">SIPJ</h2>
+                                        <p class="text-white-50 mb-4">Sistem Informasi Pariwisata Jawa</p>
+                                        <div class="text-white-50">
+                                            <p><i class="fas fa-mountain mr-2"></i> Kelola Destinasi Wisata</p>
+                                            <p><i class="fas fa-bed mr-2"></i> Kelola Akomodasi</p>
+                                            <p><i class="fas fa-bus mr-2"></i> Kelola Transportasi</p>
+                                            <p><i class="fas fa-utensils mr-2"></i> Kelola Kuliner</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <div class="login-brand mb-4">
+                                            <i class="fas fa-user-shield fa-2x text-primary mb-2"></i>
+                                            <h1 class="h4 text-gray-900">Selamat Datang!</h1>
+                                            <p class="mb-4 text-gray-600">Silakan login ke dashboard admin</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Flash Messages -->
+                                    <% if (error && error.length) { %>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                                            <%= error %>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    <% } %>
+
+                                    <% if (success && success.length) { %>
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <i class="fas fa-check-circle mr-2"></i>
+                                            <%= success %>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    <% } %>
+
+                                    <form class="user" method="post" action="/admin/login">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-user" name="email" 
+                                                   id="exampleInputEmail" aria-describedby="emailHelp"
+                                                   placeholder="Masukkan Email..." required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user" name="password"
+                                                   id="exampleInputPassword" placeholder="Password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Ingat Saya</label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            <i class="fas fa-sign-in-alt mr-2"></i>
+                                            Login
+                                        </button>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" href="#">Lupa Password?</a>
+                                    </div>
+                                    <div class="text-center mt-4">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle mr-1"></i>
+                                            Default: admin@example.com / admin123
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/js/sb-admin-2.min.js"></script>
+</body>
+</html>

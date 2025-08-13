@@ -1,0 +1,238 @@
+<% layout('layouts/main') -%>
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+        <i class="fas fa-mountain text-primary mr-2"></i>
+        <%= title %>
+    </h1>
+    <a href="/admin/destinasi" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali ke Daftar
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Form Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-edit mr-2"></i>
+                    Form <%= item ? 'Edit' : 'Tambah' %> Destinasi
+                </h6>
+            </div>
+            <div class="card-body">
+                <form method="post" action="<%= action %>" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nama" class="form-label">
+                                    <i class="fas fa-map-marked-alt text-primary mr-1"></i>
+                                    Nama Destinasi <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" 
+                                       name="nama" 
+                                       id="nama"
+                                       class="form-control" 
+                                       placeholder="Contoh: Candi Borobudur"
+                                       required 
+                                       value="<%= item ? item.nama : '' %>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="lokasi" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-danger mr-1"></i>
+                                    Lokasi
+                                </label>
+                                <input type="text" 
+                                       name="lokasi" 
+                                       id="lokasi"
+                                       class="form-control" 
+                                       placeholder="Contoh: Magelang, Jawa Tengah"
+                                       value="<%= item ? item.lokasi : '' %>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deskripsi" class="form-label">
+                            <i class="fas fa-align-left text-info mr-1"></i>
+                            Deskripsi
+                        </label>
+                        <textarea name="deskripsi" 
+                                  id="deskripsi"
+                                  class="form-control" 
+                                  rows="4"
+                                  placeholder="Masukkan deskripsi destinasi wisata..."><%= item ? item.deskripsi : '' %></textarea>
+                        <small class="form-text text-muted">
+                            Jelaskan tentang destinasi, sejarah, fasilitas, atau informasi menarik lainnya.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image" class="form-label">
+                            <i class="fas fa-camera text-success mr-1"></i>
+                            Gambar Destinasi
+                        </label>
+                        <div class="custom-file">
+                            <input type="file" 
+                                   name="image" 
+                                   id="imageInput" 
+                                   class="custom-file-input"
+                                   accept="image/*">
+                            <label class="custom-file-label" for="imageInput">Pilih gambar...</label>
+                        </div>
+                        <small class="form-text text-muted">
+                            Format yang didukung: JPG, PNG, GIF. Maksimal ukuran 5MB.
+                        </small>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div class="form-group">
+                        <div id="imagePreview" class="mt-3">
+                            <% if (item && item.image) { %>
+                                <div class="text-center">
+                                    <label class="form-label">Preview Gambar Saat Ini:</label>
+                                    <div>
+                                        <img id="preview" 
+                                             src="<%= item.image %>" 
+                                             class="preview-image img-thumbnail" 
+                                             alt="Preview">
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div id="previewContainer" class="text-center" style="display:none">
+                                    <label class="form-label">Preview Gambar:</label>
+                                    <div>
+                                        <img id="preview" 
+                                             src="" 
+                                             class="preview-image img-thumbnail" 
+                                             alt="Preview">
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group text-right">
+                        <a href="/admin/destinasi" class="btn btn-secondary mr-2">
+                            <i class="fas fa-times mr-1"></i> Batal
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-1"></i> 
+                            <%= item ? 'Update' : 'Simpan' %> Destinasi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Help Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-question-circle mr-2"></i>
+                    Bantuan
+                </h6>
+            </div>
+            <div class="card-body">
+                <h6 class="font-weight-bold text-primary">
+                    <i class="fas fa-lightbulb mr-1"></i> Tips Mengisi Form:
+                </h6>
+                <ul class="list-unstyled mt-2">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success mr-2"></i>
+                        Gunakan nama yang jelas dan mudah diingat
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success mr-2"></i>
+                        Sertakan lokasi yang spesifik
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success mr-2"></i>
+                        Deskripsi yang menarik akan membantu wisatawan
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success mr-2"></i>
+                        Upload gambar berkualitas baik
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Preview Info -->
+        <% if (item) { %>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Informasi Data
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Dibuat:</strong><br>
+                    <small class="text-muted">
+                        <%= item.created_at ? new Date(item.created_at).toLocaleString('id-ID') : '-' %>
+                    </small>
+                </p>
+                <p class="mb-0">
+                    <strong>ID:</strong> #<%= item.id %>
+                </p>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Image preview functionality
+    const imageInput = document.getElementById('imageInput');
+    const preview = document.getElementById('preview');
+    const previewContainer = document.getElementById('previewContainer');
+    const fileLabel = document.querySelector('.custom-file-label');
+
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        
+        if (file) {
+            // Update label
+            fileLabel.textContent = file.name;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                if (previewContainer) {
+                    previewContainer.style.display = 'block';
+                }
+            }
+            reader.readAsDataURL(file);
+        } else {
+            fileLabel.textContent = 'Pilih gambar...';
+            if (previewContainer) {
+                previewContainer.style.display = 'none';
+            }
+        }
+    });
+
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const nama = document.getElementById('nama').value.trim();
+        
+        if (!nama) {
+            e.preventDefault();
+            alert('Nama destinasi harus diisi!');
+            document.getElementById('nama').focus();
+            return false;
+        }
+    });
+});
+</script>

@@ -1,0 +1,162 @@
+<% layout('layouts/main') -%>
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+        <i class="fas fa-mountain text-primary mr-2"></i>
+        Kelola Destinasi Wisata
+    </h1>
+    <a href="/admin/destinasi/create" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Destinasi
+    </a>
+</div>
+
+<!-- DataTales Card -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Destinasi Wisata</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="15%">Gambar</th>
+                        <th width="25%">Nama Destinasi</th>
+                        <th width="20%">Lokasi</th>
+                        <th width="25%">Deskripsi</th>
+                        <th width="10%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(function(item, index){ %>
+                        <tr>
+                            <td class="text-center"><%= index + 1 %></td>
+                            <td class="text-center">
+                                <% if (item.image) { %>
+                                    <img src="<%= item.image %>" class="thumb img-thumbnail" alt="<%= item.nama %>">
+                                <% } else { %>
+                                    <div class="bg-secondary thumb img-thumbnail d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-image text-white"></i>
+                                    </div>
+                                <% } %>
+                            </td>
+                            <td>
+                                <strong><%= item.nama %></strong>
+                            </td>
+                            <td>
+                                <i class="fas fa-map-marker-alt text-danger mr-1"></i>
+                                <%= item.lokasi || '-' %>
+                            </td>
+                            <td>
+                                <% if (item.deskripsi) { %>
+                                    <%= item.deskripsi.length > 100 ? item.deskripsi.substring(0, 100) + '...' : item.deskripsi %>
+                                <% } else { %>
+                                    <span class="text-muted">Tidak ada deskripsi</span>
+                                <% } %>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="/admin/destinasi/<%= item.id %>/edit" 
+                                       class="btn btn-sm btn-primary" 
+                                       data-toggle="tooltip" 
+                                       title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger" 
+                                            data-toggle="modal" 
+                                            data-target="#deleteModal<%= item.id %>"
+                                            title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Hapus</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="text-center">
+                                            <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                                            <h4>Yakin ingin menghapus?</h4>
+                                            <p class="mb-0">Destinasi "<strong><%= item.nama %></strong>" akan dihapus permanen.</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                                        <form method="post" action="/admin/destinasi/<%= item.id %>/delete" style="display:inline">
+                                            <button class="btn btn-danger">
+                                                <i class="fas fa-trash mr-1"></i> Ya, Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Info Card -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Informasi</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">
+                    <i class="fas fa-info-circle text-info mr-2"></i>
+                    Total <strong><%= items.length %></strong> destinasi wisata terdaftar dalam sistem.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <a href="/admin/destinasi/create" class="btn btn-success btn-sm mr-2">
+                    <i class="fas fa-plus mr-1"></i> Tambah Baru
+                </a>
+                <a href="/admin" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left mr-1"></i> Kembali ke Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Initialize DataTable
+    $('#dataTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json"
+        },
+        "pageLength": 10,
+        "order": [[ 0, "asc" ]],
+        "columnDefs": [
+            { "orderable": false, "targets": [1, 5] } // Disable sorting for image and action columns
+        ]
+    });
+
+    // Initialize tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>

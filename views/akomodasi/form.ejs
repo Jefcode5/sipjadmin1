@@ -1,0 +1,311 @@
+<%- include('../layouts/main', { 
+    title: (typeof akomodasi !== 'undefined' && akomodasi) ? 'Edit Akomodasi' : 'Tambah Akomodasi',
+    page: 'akomodasi'
+}) %>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-bed text-success"></i>
+            <%= (typeof akomodasi !== 'undefined' && akomodasi) ? 'Edit Akomodasi' : 'Tambah Akomodasi' %>
+        </h1>
+        <a href="/admin/akomodasi" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali ke Daftar
+        </a>
+    </div>
+
+    <!-- Error Messages -->
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h6><i class="fas fa-exclamation-circle"></i> Terjadi Kesalahan:</h6>
+            <ul class="mb-0">
+                <% errors.forEach(error => { %>
+                    <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+
+    <!-- Form Card -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-success">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-edit"></i> Form Data Akomodasi
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form action="<%= (typeof akomodasi !== 'undefined' && akomodasi) ? `/admin/akomodasi/update/${akomodasi.id}` : '/admin/akomodasi/store' %>" 
+                          method="POST" 
+                          enctype="multipart/form-data"
+                          id="akomodasiForm">
+                        
+                        <div class="row">
+                            <!-- Nama Akomodasi -->
+                            <div class="col-md-12 mb-3">
+                                <label for="nama" class="form-label">
+                                    <i class="fas fa-bed text-success"></i> Nama Akomodasi *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="nama" 
+                                       name="nama" 
+                                       value="<%= (typeof akomodasi !== 'undefined' && akomodasi) ? akomodasi.nama : '' %>"
+                                       placeholder="Masukkan nama akomodasi"
+                                       required>
+                                <small class="form-text text-muted">Contoh: Hotel Borobudur, Villa Sunset, Guest House Malioboro</small>
+                            </div>
+
+                            <!-- Lokasi -->
+                            <div class="col-md-6 mb-3">
+                                <label for="lokasi" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-danger"></i> Lokasi *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="lokasi" 
+                                       name="lokasi" 
+                                       value="<%= (typeof akomodasi !== 'undefined' && akomodasi) ? akomodasi.lokasi : '' %>"
+                                       placeholder="Masukkan lokasi akomodasi"
+                                       required>
+                                <small class="form-text text-muted">Alamat lengkap atau area umum</small>
+                            </div>
+
+                            <!-- Harga -->
+                            <div class="col-md-6 mb-3">
+                                <label for="harga" class="form-label">
+                                    <i class="fas fa-money-bill-wave text-success"></i> Harga per Malam *
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
+                                    </div>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="harga" 
+                                           name="harga" 
+                                           value="<%= (typeof akomodasi !== 'undefined' && akomodasi) ? akomodasi.harga : '' %>"
+                                           placeholder="0"
+                                           min="0"
+                                           required>
+                                </div>
+                                <small class="form-text text-muted">Harga dalam Rupiah per malam</small>
+                            </div>
+
+                            <!-- Rating -->
+                            <div class="col-md-6 mb-3">
+                                <label for="rating" class="form-label">
+                                    <i class="fas fa-star text-warning"></i> Rating
+                                </label>
+                                <select class="form-control" id="rating" name="rating">
+                                    <option value="">Pilih Rating</option>
+                                    <option value="1" <%= (typeof akomodasi !== 'undefined' && akomodasi && akomodasi.rating == 1) ? 'selected' : '' %>>⭐ 1</option>
+                                    <option value="2" <%= (typeof akomodasi !== 'undefined' && akomodasi && akomodasi.rating == 2) ? 'selected' : '' %>>⭐⭐ 2</option>
+                                    <option value="3" <%= (typeof akomodasi !== 'undefined' && akomodasi && akomodasi.rating == 3) ? 'selected' : '' %>>⭐⭐⭐ 3</option>
+                                    <option value="4" <%= (typeof akomodasi !== 'undefined' && akomodasi && akomodasi.rating == 4) ? 'selected' : '' %>>⭐⭐⭐⭐ 4</option>
+                                    <option value="5" <%= (typeof akomodasi !== 'undefined' && akomodasi && akomodasi.rating == 5) ? 'selected' : '' %>>⭐⭐⭐⭐⭐ 5</option>
+                                </select>
+                                <small class="form-text text-muted">Rating berdasarkan ulasan pengunjung</small>
+                            </div>
+
+                            <!-- Kontak -->
+                            <div class="col-md-6 mb-3">
+                                <label for="kontak" class="form-label">
+                                    <i class="fas fa-phone text-info"></i> Kontak
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="kontak" 
+                                       name="kontak" 
+                                       value="<%= (typeof akomodasi !== 'undefined' && akomodasi) ? akomodasi.kontak : '' %>"
+                                       placeholder="Nomor telepon atau email">
+                                <small class="form-text text-muted">No. HP, telepon, atau email</small>
+                            </div>
+
+                            <!-- Fasilitas -->
+                            <div class="col-md-12 mb-3">
+                                <label for="fasilitas" class="form-label">
+                                    <i class="fas fa-concierge-bell text-primary"></i> Fasilitas
+                                </label>
+                                <textarea class="form-control" 
+                                          id="fasilitas" 
+                                          name="fasilitas" 
+                                          rows="3"
+                                          placeholder="Jelaskan fasilitas yang tersedia"><%= (typeof akomodasi !== 'undefined' && akomodasi) ? akomodasi.fasilitas : '' %></textarea>
+                                <small class="form-text text-muted">Contoh: AC, WiFi, TV, Kamar mandi dalam, Sarapan, Kolam renang, dll</small>
+                            </div>
+
+                            <!-- Deskripsi -->
+                            <div class="col-md-12 mb-3">
+                                <label for="deskripsi" class="form-label">
+                                    <i class="fas fa-align-left text-secondary"></i> Deskripsi
+                                </label>
+                                <textarea class="form-control" 
+                                          id="deskripsi" 
+                                          name="deskripsi" 
+                                          rows="4"
+                                          placeholder="Jelaskan tentang akomodasi ini"><%= (typeof akomodasi !== 'undefined' && akomodasi) ? akomodasi.deskripsi : '' %></textarea>
+                                <small class="form-text text-muted">Deskripsi detail tentang akomodasi</small>
+                            </div>
+
+                            <!-- Gambar -->
+                            <div class="col-md-12 mb-3">
+                                <label for="gambar" class="form-label">
+                                    <i class="fas fa-image text-info"></i> Gambar Akomodasi
+                                </label>
+                                <input type="file" 
+                                       class="form-control-file" 
+                                       id="gambar" 
+                                       name="gambar" 
+                                       accept="image/*">
+                                <small class="form-text text-muted">Format: JPG, PNG, GIF. Maksimal 5MB</small>
+                                
+                                <% if (typeof akomodasi !== 'undefined' && akomodasi && akomodasi.gambar) { %>
+                                    <div class="mt-3">
+                                        <p class="mb-2"><strong>Gambar saat ini:</strong></p>
+                                        <img src="/uploads/akomodasi/<%= akomodasi.gambar %>" 
+                                             alt="<%= akomodasi.nama %>" 
+                                             class="img-thumbnail" 
+                                             style="max-width: 200px; max-height: 150px;">
+                                        <p class="text-muted mt-2">
+                                            <small><i class="fas fa-info-circle"></i> Biarkan kosong jika tidak ingin mengganti gambar</small>
+                                        </p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-success mr-2">
+                                    <i class="fas fa-save"></i> 
+                                    <%= (typeof akomodasi !== 'undefined' && akomodasi) ? 'Update' : 'Simpan' %>
+                                </button>
+                                <a href="/admin/akomodasi" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Batal
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-info">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-lightbulb"></i> Tips Pengisian
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-bed fa-3x text-success"></i>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Nama:</strong> Gunakan nama lengkap dan jelas
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Lokasi:</strong> Sertakan area atau jalan utama
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Harga:</strong> Cantumkan harga per malam
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Fasilitas:</strong> Detail fasilitas yang tersedia
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Gambar:</strong> Foto yang menarik dan berkualitas
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<script>
+$(document).ready(function() {
+    // Format input harga
+    $('#harga').on('input', function() {
+        let value = this.value.replace(/[^\d]/g, '');
+        this.value = value;
+    });
+    
+    // Preview gambar
+    $('#gambar').on('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = `
+                    <div class="mt-3" id="imagePreview">
+                        <p class="mb-2"><strong>Preview gambar baru:</strong></p>
+                        <img src="${e.target.result}" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                    </div>
+                `;
+                
+                $('#imagePreview').remove();
+                $(preview).insertAfter('#gambar').next('.form-text');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Form validation
+    $('#akomodasiForm').on('submit', function(e) {
+        let isValid = true;
+        
+        // Validasi nama
+        if ($('#nama').val().trim() === '') {
+            isValid = false;
+            $('#nama').addClass('is-invalid');
+        } else {
+            $('#nama').removeClass('is-invalid');
+        }
+        
+        // Validasi lokasi
+        if ($('#lokasi').val().trim() === '') {
+            isValid = false;
+            $('#lokasi').addClass('is-invalid');
+        } else {
+            $('#lokasi').removeClass('is-invalid');
+        }
+        
+        // Validasi harga
+        if ($('#harga').val().trim() === '' || parseInt($('#harga').val()) < 0) {
+            isValid = false;
+            $('#harga').addClass('is-invalid');
+        } else {
+            $('#harga').removeClass('is-invalid');
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $('.is-invalid').first().offset().top - 100
+            }, 500);
+        }
+    });
+});
+</script>
+
+<%- include('../layouts/main', { bodyOnly: true }) %>

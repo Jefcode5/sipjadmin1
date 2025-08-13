@@ -1,0 +1,314 @@
+<%- include('../layouts/main', { 
+    title: (typeof transportasi !== 'undefined' && transportasi) ? 'Edit Transportasi' : 'Tambah Transportasi',
+    page: 'transportasi'
+}) %>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-bus text-primary"></i>
+            <%= (typeof transportasi !== 'undefined' && transportasi) ? 'Edit Transportasi' : 'Tambah Transportasi' %>
+        </h1>
+        <a href="/admin/transportasi" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali ke Daftar
+        </a>
+    </div>
+
+    <!-- Error Messages -->
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h6><i class="fas fa-exclamation-circle"></i> Terjadi Kesalahan:</h6>
+            <ul class="mb-0">
+                <% errors.forEach(error => { %>
+                    <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+
+    <!-- Form Card -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-primary">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-edit"></i> Form Data Transportasi
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form action="<%= (typeof transportasi !== 'undefined' && transportasi) ? `/admin/transportasi/update/${transportasi.id}` : '/admin/transportasi/store' %>" 
+                          method="POST" 
+                          enctype="multipart/form-data"
+                          id="transportasiForm">
+                        
+                        <div class="row">
+                            <!-- Nama Transportasi -->
+                            <div class="col-md-12 mb-3">
+                                <label for="nama" class="form-label">
+                                    <i class="fas fa-bus text-primary"></i> Nama Transportasi *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="nama" 
+                                       name="nama" 
+                                       value="<%= (typeof transportasi !== 'undefined' && transportasi) ? transportasi.nama : '' %>"
+                                       placeholder="Masukkan nama transportasi"
+                                       required>
+                                <small class="form-text text-muted">Contoh: Trans Jogja, Ojek Online, Travel Antar Kota</small>
+                            </div>
+
+                            <!-- Jenis -->
+                            <div class="col-md-6 mb-3">
+                                <label for="jenis" class="form-label">
+                                    <i class="fas fa-tag text-primary"></i> Jenis Transportasi *
+                                </label>
+                                <select class="form-control" id="jenis" name="jenis" required>
+                                    <option value="">Pilih Jenis Transportasi</option>
+                                    <option value="Bus" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Bus') ? 'selected' : '' %>>🚌 Bus</option>
+                                    <option value="Angkot" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Angkot') ? 'selected' : '' %>>🚐 Angkot</option>
+                                    <option value="Ojek" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Ojek') ? 'selected' : '' %>>🛵 Ojek</option>
+                                    <option value="Taksi" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Taksi') ? 'selected' : '' %>>🚕 Taksi</option>
+                                    <option value="Travel" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Travel') ? 'selected' : '' %>>🚗 Travel</option>
+                                    <option value="Kereta" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Kereta') ? 'selected' : '' %>>🚄 Kereta</option>
+                                    <option value="Pesawat" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Pesawat') ? 'selected' : '' %>>✈️ Pesawat</option>
+                                    <option value="Rental" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Rental') ? 'selected' : '' %>>🚙 Rental Mobil</option>
+                                    <option value="Lainnya" <%= (typeof transportasi !== 'undefined' && transportasi && transportasi.jenis == 'Lainnya') ? 'selected' : '' %>>🚲 Lainnya</option>
+                                </select>
+                                <small class="form-text text-muted">Pilih kategori transportasi</small>
+                            </div>
+
+                            <!-- Harga -->
+                            <div class="col-md-6 mb-3">
+                                <label for="harga" class="form-label">
+                                    <i class="fas fa-money-bill-wave text-success"></i> Harga Estimasi
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
+                                    </div>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="harga" 
+                                           name="harga" 
+                                           value="<%= (typeof transportasi !== 'undefined' && transportasi) ? transportasi.harga : '' %>"
+                                           placeholder="0"
+                                           min="0">
+                                </div>
+                                <small class="form-text text-muted">Harga rata-rata dalam Rupiah (opsional)</small>
+                            </div>
+
+                            <!-- Rute -->
+                            <div class="col-md-12 mb-3">
+                                <label for="rute" class="form-label">
+                                    <i class="fas fa-route text-info"></i> Rute/Jalur *
+                                </label>
+                                <textarea class="form-control" 
+                                          id="rute" 
+                                          name="rute" 
+                                          rows="3"
+                                          placeholder="Jelaskan rute atau jalur yang dilayani"
+                                          required><%= (typeof transportasi !== 'undefined' && transportasi) ? transportasi.rute : '' %></textarea>
+                                <small class="form-text text-muted">Contoh: Terminal Giwangan - Malioboro - Stasiun Tugu</small>
+                            </div>
+
+                            <!-- Kontak -->
+                            <div class="col-md-6 mb-3">
+                                <label for="kontak" class="form-label">
+                                    <i class="fas fa-phone text-success"></i> Kontak
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="kontak" 
+                                       name="kontak" 
+                                       value="<%= (typeof transportasi !== 'undefined' && transportasi) ? transportasi.kontak : '' %>"
+                                       placeholder="Nomor telepon atau aplikasi">
+                                <small class="form-text text-muted">No. HP, telepon, atau nama aplikasi</small>
+                            </div>
+
+                            <!-- Lokasi -->
+                            <div class="col-md-6 mb-3">
+                                <label for="lokasi" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-danger"></i> Lokasi/Terminal
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="lokasi" 
+                                       name="lokasi" 
+                                       value="<%= (typeof transportasi !== 'undefined' && transportasi) ? transportasi.lokasi : '' %>"
+                                       placeholder="Terminal atau area operasi">
+                                <small class="form-text text-muted">Terminal utama atau area operasi</small>
+                            </div>
+
+                            <!-- Deskripsi -->
+                            <div class="col-md-12 mb-3">
+                                <label for="deskripsi" class="form-label">
+                                    <i class="fas fa-align-left text-secondary"></i> Deskripsi
+                                </label>
+                                <textarea class="form-control" 
+                                          id="deskripsi" 
+                                          name="deskripsi" 
+                                          rows="4"
+                                          placeholder="Jelaskan detail transportasi ini"><%= (typeof transportasi !== 'undefined' && transportasi) ? transportasi.deskripsi : '' %></textarea>
+                                <small class="form-text text-muted">Deskripsi detail, jadwal operasi, dll</small>
+                            </div>
+
+                            <!-- Gambar -->
+                            <div class="col-md-12 mb-3">
+                                <label for="gambar" class="form-label">
+                                    <i class="fas fa-image text-info"></i> Gambar Transportasi
+                                </label>
+                                <input type="file" 
+                                       class="form-control-file" 
+                                       id="gambar" 
+                                       name="gambar" 
+                                       accept="image/*">
+                                <small class="form-text text-muted">Format: JPG, PNG, GIF. Maksimal 5MB</small>
+                                
+                                <% if (typeof transportasi !== 'undefined' && transportasi && transportasi.gambar) { %>
+                                    <div class="mt-3">
+                                        <p class="mb-2"><strong>Gambar saat ini:</strong></p>
+                                        <img src="/uploads/transportasi/<%= transportasi.gambar %>" 
+                                             alt="<%= transportasi.nama %>" 
+                                             class="img-thumbnail" 
+                                             style="max-width: 200px; max-height: 150px;">
+                                        <p class="text-muted mt-2">
+                                            <small><i class="fas fa-info-circle"></i> Biarkan kosong jika tidak ingin mengganti gambar</small>
+                                        </p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary mr-2">
+                                    <i class="fas fa-save"></i> 
+                                    <%= (typeof transportasi !== 'undefined' && transportasi) ? 'Update' : 'Simpan' %>
+                                </button>
+                                <a href="/admin/transportasi" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Batal
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-info">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-lightbulb"></i> Tips Pengisian
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-bus fa-3x text-primary"></i>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Nama:</strong> Gunakan nama yang mudah dikenal
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Jenis:</strong> Pilih kategori yang sesuai
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Rute:</strong> Jelaskan jalur dengan detail
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Harga:</strong> Cantumkan tarif umum
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Kontak:</strong> Sertakan info untuk booking
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<script>
+$(document).ready(function() {
+    // Format input harga
+    $('#harga').on('input', function() {
+        let value = this.value.replace(/[^\d]/g, '');
+        this.value = value;
+    });
+    
+    // Preview gambar
+    $('#gambar').on('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = `
+                    <div class="mt-3" id="imagePreview">
+                        <p class="mb-2"><strong>Preview gambar baru:</strong></p>
+                        <img src="${e.target.result}" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                    </div>
+                `;
+                
+                $('#imagePreview').remove();
+                $(preview).insertAfter('#gambar').next('.form-text');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Form validation
+    $('#transportasiForm').on('submit', function(e) {
+        let isValid = true;
+        
+        // Validasi nama
+        if ($('#nama').val().trim() === '') {
+            isValid = false;
+            $('#nama').addClass('is-invalid');
+        } else {
+            $('#nama').removeClass('is-invalid');
+        }
+        
+        // Validasi jenis
+        if ($('#jenis').val() === '') {
+            isValid = false;
+            $('#jenis').addClass('is-invalid');
+        } else {
+            $('#jenis').removeClass('is-invalid');
+        }
+        
+        // Validasi rute
+        if ($('#rute').val().trim() === '') {
+            isValid = false;
+            $('#rute').addClass('is-invalid');
+        } else {
+            $('#rute').removeClass('is-invalid');
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $('.is-invalid').first().offset().top - 100
+            }, 500);
+        }
+    });
+});
+</script>
+
+<%- include('../layouts/main', { bodyOnly: true }) %>

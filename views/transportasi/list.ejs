@@ -1,0 +1,215 @@
+<%- include('../layouts/main', { 
+    title: 'Data Transportasi',
+    page: 'transportasi'
+}) %>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-bus text-primary"></i> Data Transportasi
+        </h1>
+        <a href="/admin/transportasi/create" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Transportasi
+        </a>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <% if (typeof success !== 'undefined' && success) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> <%= success %>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <%= error %>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+
+    <!-- DataTales Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-primary">
+            <h6 class="m-0 font-weight-bold text-white">
+                <i class="fas fa-table"></i> Tabel Data Transportasi
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th width="5%">No</th>
+                            <th width="15%">Gambar</th>
+                            <th width="20%">Nama Transportasi</th>
+                            <th width="10%">Jenis</th>
+                            <th width="20%">Rute</th>
+                            <th width="10%">Harga</th>
+                            <th width="10%">Kontak</th>
+                            <th width="10%">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (transportasi && transportasi.length > 0) { %>
+                            <% transportasi.forEach((item, index) => { %>
+                                <tr>
+                                    <td class="text-center"><%= index + 1 %></td>
+                                    <td class="text-center">
+                                        <% if (item.gambar) { %>
+                                            <img src="/uploads/transportasi/<%= item.gambar %>" 
+                                                 alt="<%= item.nama %>" 
+                                                 class="img-thumbnail" 
+                                                 style="width: 80px; height: 60px; object-fit: cover;">
+                                        <% } else { %>
+                                            <div class="bg-light d-flex align-items-center justify-content-center" 
+                                                 style="width: 80px; height: 60px; border-radius: 5px;">
+                                                <i class="fas fa-image text-muted"></i>
+                                            </div>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <strong><%= item.nama %></strong>
+                                        <% if (item.deskripsi) { %>
+                                            <br><small class="text-muted"><%= item.deskripsi.substring(0, 50) %>...</small>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (item.jenis) { %>
+                                            <span class="badge badge-primary">
+                                                <i class="fas fa-tag"></i> <%= item.jenis %>
+                                            </span>
+                                        <% } else { %>
+                                            <small class="text-muted">-</small>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (item.rute) { %>
+                                            <small class="text-muted">
+                                                <i class="fas fa-route text-info"></i>
+                                                <%= item.rute.substring(0, 30) %>...
+                                            </small>
+                                        <% } else { %>
+                                            <small class="text-muted">-</small>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (item.harga) { %>
+                                            <span class="badge badge-success">
+                                                Rp <%= new Intl.NumberFormat('id-ID').format(item.harga) %>
+                                            </span>
+                                        <% } else { %>
+                                            <small class="text-muted">-</small>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (item.kontak) { %>
+                                            <small class="text-muted">
+                                                <i class="fas fa-phone text-success"></i>
+                                                <%= item.kontak.substring(0, 15) %>...
+                                            </small>
+                                        <% } else { %>
+                                            <small class="text-muted">-</small>
+                                        <% } %>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="/admin/transportasi/edit/<%= item.id %>" 
+                                               class="btn btn-warning btn-sm" 
+                                               data-toggle="tooltip" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" 
+                                                    class="btn btn-danger btn-sm" 
+                                                    data-toggle="modal" 
+                                                    data-target="#deleteModal<%= item.id %>"
+                                                    title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal<%= item.id %>" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                                                    Konfirmasi Hapus
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Apakah Anda yakin ingin menghapus transportasi:</p>
+                                                <strong><%= item.nama %></strong>
+                                                <p class="text-danger mt-2">
+                                                    <small><i class="fas fa-info-circle"></i> Data yang dihapus tidak dapat dikembalikan!</small>
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    <i class="fas fa-times"></i> Batal
+                                                </button>
+                                                <form action="/admin/transportasi/delete/<%= item.id %>" method="POST" style="display: inline;">
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="fas fa-trash"></i> Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                                        <p>Belum ada data transportasi</p>
+                                        <a href="/admin/transportasi/create" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus"></i> Tambah Transportasi Pertama
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<!-- DataTables JavaScript -->
+<script>
+$(document).ready(function() {
+    $('#dataTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+        },
+        "pageLength": 10,
+        "order": [[ 2, "asc" ]],
+        "columnDefs": [
+            { "orderable": false, "targets": [1, 7] }
+        ]
+    });
+    
+    // Initialize tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
+<%- include('../layouts/main', { bodyOnly: true }) %>
